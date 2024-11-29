@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protótipo de Sistema Operacional</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        #app {
+            max-width: 500px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #conteudo {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .back-button {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Sistema Operacional de Celular</h1>
+        <div id="menu">
+            <button onclick="mostrarBateria()">Ver Nível de Bateria</button>
+            <button onclick="mostrarMensagens()">Mensagens</button>
+            <button onclick="mostrarHistorico()">Histórico de Ligações</button>
+            <button onclick="mostrarAgenda()">Agenda</button>
+            <button onclick="mostrarCreditos()">Créditos</button>
+            <button onclick="mostrarOperadora()">Operadora</button>
+        </div>
+
+        <div id="conteudo">
+            <!-- O conteúdo dinâmico será exibido aqui -->
+        </div>
+    </div>
+
+    <script>
+        // Estado inicial do sistema
+        const sistema = {
+            bateria: 100,
+            creditos: 10,
+            operadora: "Operadora XYZ",
+            mensagens: [],
+            historicoLigações: [],
+            agenda: []
+        };
+
+        // Função para atualizar a interface
+        function atualizarConteudo(html) {
+            document.getElementById("conteudo").innerHTML = html;
+        }
+
+        // Opção "Ver Nível de Bateria"
+        function mostrarBateria() {
+            atualizarConteudo(`
+                <h2>Nível de Bateria</h2>
+                <p>Bateria atual: ${sistema.bateria}%</p>
+                <p>Estimativa de duração: ${sistema.bateria * 3} minutos</p>
+                <button class="back-button" onclick="voltar()">Voltar</button>
+            `);
+        }
+
+        // Opção "Mensagens"
+        function mostrarMensagens() {
+            const mensagensHTML = sistema.mensagens.length
+                ? sistema.mensagens.map((m, i) => `<p>${i + 1}. Para ${m.destinatario}: ${m.conteudo}</p>`).join("")
+                : "<p>Nenhuma mensagem recebida.</p>";
+
+            atualizarConteudo(`
+                <h2>Mensagens</h2>
+                ${mensagensHTML}
+                <button class="back-button" onclick="voltar()">Voltar</button>
+            `);
+        }
+
+        // Opção "Histórico de Ligações"
+        function mostrarHistorico() {
+            const historicoHTML = sistema.historicoLigações.length
+                ? sistema.historicoLigações.map((l, i) => `<p>${i + 1}. Ligação para ${l.destinatario}, duração: ${l.duracao} segundos</p>`).join("")
+                : "<p>Histórico vazio.</p>";
+
+            atualizarConteudo(`
+                <h2>Histórico de Ligações</h2>
+                ${historicoHTML}
+                <button class="back-button" onclick="voltar()">Voltar</button>
+            `);
+        }
+
+        // Opção "Agenda"
+        function mostrarAgenda() {
+            const contatosHTML = sistema.agenda.length
+                ? sistema.agenda.map((c, i) => `<p>${i + 1}. ${c.nome} - ${c.telefone}</p>`).join("")
+                : "<p>Nenhum contato na agenda.</p>";
+
+            atualizarConteudo(`
+                <h2>Agenda</h2>
+                ${contatosHTML}
+                <button onclick="adicionarContato()">Adicionar Contato</button>
+                <button class="back-button" onclick="voltar()">Voltar</button>
+            `);
+        }
+
+        // Adicionar um contato na agenda
+        function adicionarContato() {
+            const nome = prompt("Digite o nome do contato:");
+            const telefone = prompt("Digite o telefone do contato:");
+            if (nome && telefone) {
+                sistema.agenda.push({ nome, telefone });
+                alert("Contato adicionado com sucesso!");
+                mostrarAgenda();
+            }
+        }
+
+        // Opção "Créditos"
+        function mostrarCreditos() {
+            const ligacoesPossiveis = Math.floor(sistema.creditos / 2);
+            const mensagensPossiveis = sistema.creditos;
+
+            atualizarConteudo(`
+                <h2>Créditos</h2>
+                <p>Créditos disponíveis: ${sistema.creditos}</p>
+                <p>Ligações possíveis: ${ligacoesPossiveis}</p>
+                <p>Mensagens possíveis: ${mensagensPossiveis}</p>
+                <button class="back-button" onclick="voltar()">Voltar</button>
+            `);
+        }
+
+        // Opção "Operadora"
+        function mostrarOperadora() {
+            atualizarConteudo(`
+                <h2>Operadora</h2>
+                <p>Operadora atual: ${sistema.operadora}</p>
+                <button class="back-button" onclick="voltar()">Voltar</button>
+            `);
+        }
+
+        // Voltar ao menu inicial
+        function voltar() {
+            atualizarConteudo("");
+        }
+    </script>
+</body>
+</html>
